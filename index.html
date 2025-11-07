@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>I-STEM Software Directory — Demo (no-backend)</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        padding: 1.5rem;
+      }
+      .card-software {
+        cursor: pointer;
+      }
+      .small-muted {
+        font-size: 0.85rem;
+        color: #6c757d;
+      }
+      .tag {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 0.25rem;
+        background: #f1f3f5;
+        margin-right: 0.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="d-flex align-items-center mb-3">
+        <h1 class="me-auto">I-STEM Software Directory — Demo</h1>
+        <div>
+          <button id="btnExport" class="btn btn-outline-primary btn-sm">
+            Export CSV
+          </button>
+          <button id="btnClear" class="btn btn-outline-danger btn-sm">
+            Clear Data
+          </button>
+        </div>
+      </div>
+
+      <div class="row g-3">
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Add / Register Institution</h5>
+              <form id="institutionForm">
+                <div class="mb-2">
+                  <label class="form-label">Institution Name</label>
+                  <input class="form-control" required id="instName" />
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Type</label>
+                  <select class="form-select" id="instType">
+                    <option>IIT</option>
+                    <option>IISc</option>
+                    <option>NIT</option>
+                    <option>IIIT</option>
+                    <option>Central University</option>
+                    <option>State University</option>
+                    <option>Private University</option>
+                    <option>Research Institute</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">City / State</label>
+                  <input class="form-control" id="instCity" />
+                </div>
+                <div class="mb-2">
+                  <label class="form-label">Website URL</label>
+                  <input class="form-control" id="instWeb" />
+                </div>
+
+                <hr />
+                <h6>Authorized Contact</h6>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Name"
+                    id="contactName"
+                  />
+                </div>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Designation"
+                    id="contactDesg"
+                  />
+                </div>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Email"
+                    id="contactEmail"
+                  />
+                </div>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Phone"
+                    id="contactPhone"
+                  />
+                </div>
+
+                <hr />
+                <h6>Software (first entry)</h6>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Software name"
+                    id="swName"
+                  />
+                </div>
+                <div class="mb-2">
+                  <select class="form-select" id="swType">
+                    <option>Commercial</option>
+                    <option>Open Source</option>
+                    <option>Academic / Research License</option>
+                  </select>
+                </div>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Version / Module"
+                    id="swVersion"
+                  />
+                </div>
+                <div class="mb-2">
+                  <input
+                    class="form-control"
+                    placeholder="Total number of licenses (or 'unlimited')"
+                    id="swCount"
+                  />
+                </div>
+                <div class="mb-2">
+                  <select class="form-select" id="swAccess">
+                    <option>
+                      Available for external users (on request and approval)
+                    </option>
+                    <option>Restricted to internal use only</option>
+                    <option>
+                      Available for academic collaborations / MoUs
+                    </option>
+                  </select>
+                </div>
+                <div class="mb-2">
+                  <textarea
+                    class="form-control"
+                    rows="2"
+                    id="swRemarks"
+                    placeholder="Additional remarks or access conditions"
+                  ></textarea>
+                </div>
+
+                <div class="d-grid">
+                  <button class="btn btn-primary" type="submit">
+                    Save Institution + Software
+                  </button>
+                </div>
+              </form>
+
+              <div class="mt-3">
+                <small class="small-muted"
+                  >This is a demo single-page app that stores data in your
+                  browser (localStorage). To make it public, deploy the file or
+                  connect it to a server/backend.</small
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-8">
+          <div class="mb-3 d-flex">
+            <input
+              id="search"
+              class="form-control me-2"
+              placeholder="Search software, institution, city..."
+            />
+            <select
+              id="filterType"
+              class="form-select me-2"
+              style="max-width: 220px"
+            >
+              <option value="">All types</option>
+              <option>Commercial</option>
+              <option>Open Source</option>
+              <option>Academic / Research License</option>
+            </select>
+            <button id="btnNewInst" class="btn btn-outline-secondary">
+              New Entry
+            </button>
+          </div>
+
+          <div id="list" class="row gy-3"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: Software Details -->
+    <div class="modal fade" id="detailsModal" tabindex="-1">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Software details</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div id="modalBody"></div>
+            <hr />
+            <div>
+              <h6>Actions</h6>
+              <div class="d-flex gap-2">
+                <button id="btnRequest" class="btn btn-primary">
+                  Request Access (log)
+                </button>
+                <button id="btnMarkUsed" class="btn btn-success">
+                  Mark as Used
+                </button>
+              </div>
+            </div>
+            <hr />
+            <div>
+              <h6>Access / Usage Log</h6>
+              <div id="logArea"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Simple client-side SPA using localStorage. Good for prototyping and demos.
+      const STORAGE_KEY = "istem_software_directory_v1";
+      const LOG_KEY = "istem_access_logs_v1";
+
+      function loadData() {
+        try {
+          return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+        } catch (e) {
+          return [];
+        }
+      }
+      function saveData(d) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(d));
+      }
+      function loadLogs() {
+        try {
+          return JSON.parse(localStorage.getItem(LOG_KEY)) || [];
+        } catch (e) {
+          return [];
+        }
+      }
+      function saveLogs(l) {
+        localStorage.setItem(LOG_KEY, JSON.stringify(l));
+      }
+
+      let data = loadData();
+      let logs = loadLogs();
+
+      const form = document.getElementById("institutionForm");
+      const list = document.getElementById("list");
+      const search = document.getElementById("search");
+      const filterType = document.getElementById("filterType");
+
+      function renderList() {
+        const q = search.value.trim().toLowerCase();
+        const typeFilter = filterType.value;
+        list.innerHTML = "";
+        // flatten all software entries across institutions
+        const rows = [];
+        data.forEach((inst) => {
+          (inst.software || []).forEach((sw) => {
+            rows.push({ inst, sw });
+          });
+        });
+        const filtered = rows.filter((r) => {
+          if (typeFilter && r.sw.type !== typeFilter) return false;
+          if (!q) return true;
+          return (
+            r.sw.name +
+            " " +
+            r.inst.name +
+            " " +
+            (r.inst.city || "") +
+            " " +
+            (r.sw.remarks || "")
+          )
+            .toLowerCase()
+            .includes(q);
+        });
+
+        if (filtered.length === 0) {
+          list.innerHTML =
+            '<div class="col-12"><div class="alert alert-info">No results. Add one using the form on the left.</div></div>';
+          return;
+        }
+
+        filtered.forEach((item) => {
+          const col = document.createElement("div");
+          col.className = "col-md-6";
+          const card = document.createElement("div");
+          card.className = "card card-software";
+          card.innerHTML = `
+          <div class="card-body">
+            <div class="d-flex">
+              <div>
+                <h5 class="card-title mb-1">${escapeHtml(item.sw.name)}</h5>
+                <div class="small-muted mb-2">${escapeHtml(
+                  item.inst.name
+                )} — ${escapeHtml(item.inst.city || "")}</div>
+                <div class="mb-1">
+                  <span class="tag">${escapeHtml(item.sw.type)}</span>
+                  <span class="tag">${escapeHtml(item.sw.version || "")}</span>
+                  <span class="tag">${escapeHtml(item.sw.count || "")}</span>
+                </div>
+                <p class="mb-0 small-muted">${escapeHtml(
+                  (item.sw.remarks || "").slice(0, 140)
+                )}${(item.sw.remarks || "").length > 140 ? "..." : ""}</p>
+              </div>
+              <div class="ms-auto text-end">
+                <button class="btn btn-sm btn-outline-primary" data-action="view">View</button>
+              </div>
+            </div>
+          </div>
+        `;
+          card
+            .querySelector('[data-action="view"]')
+            .addEventListener("click", () => openDetails(item));
+          col.appendChild(card);
+          list.appendChild(col);
+        });
+      }
+
+      function escapeHtml(s) {
+        return (s || "")
+          .toString()
+          .replace(
+            /[&<>\"]/g,
+            (c) =>
+              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
+          );
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const inst = {
+          id: "inst_" + Date.now(),
+          name: document.getElementById("instName").value.trim(),
+          type: document.getElementById("instType").value,
+          city: document.getElementById("instCity").value.trim(),
+          website: document.getElementById("instWeb").value.trim(),
+          contact: {
+            name: document.getElementById("contactName").value.trim(),
+            designation: document.getElementById("contactDesg").value.trim(),
+            email: document.getElementById("contactEmail").value.trim(),
+            phone: document.getElementById("contactPhone").value.trim(),
+          },
+          software: [],
+        };
+        const sw = {
+          id: "sw_" + Date.now(),
+          name: document.getElementById("swName").value.trim(),
+          type: document.getElementById("swType").value,
+          version: document.getElementById("swVersion").value.trim(),
+          count: document.getElementById("swCount").value.trim(),
+          access: document.getElementById("swAccess").value,
+          remarks: document.getElementById("swRemarks").value.trim(),
+        };
+        if (sw.name) inst.software.push(sw);
+
+        // if institution with same name exists, append software; otherwise add new
+        const existing = data.find(
+          (d) =>
+            d.name.toLowerCase() === inst.name.toLowerCase() &&
+            d.city === inst.city
+        );
+        if (existing) {
+          existing.software = existing.software.concat(inst.software);
+          existing.contact = inst.contact; // update contact
+        } else {
+          data.push(inst);
+        }
+        saveData(data);
+        form.reset();
+        renderList();
+        alert("Saved locally in your browser storage.");
+      });
+
+      function openDetails(item) {
+        const modal = new bootstrap.Modal(
+          document.getElementById("detailsModal")
+        );
+        document.getElementById("modalTitle").textContent =
+          item.sw.name + " — " + item.inst.name;
+        const b = document.getElementById("modalBody");
+        b.innerHTML = `
+        <div><strong>Institution:</strong> ${escapeHtml(
+          item.inst.name
+        )} (${escapeHtml(item.inst.type)})</div>
+        <div><strong>City:</strong> ${escapeHtml(item.inst.city || "")}</div>
+        <div><strong>Website:</strong> <a href="${escapeHtml(
+          item.inst.website || "#"
+        )}">${escapeHtml(item.inst.website || "—")}</a></div>
+        <hr>
+        <h6>Contact</h6>
+        <div>${escapeHtml(item.inst.contact.name || "—")} — ${escapeHtml(
+          item.inst.contact.designation || ""
+        )}</div>
+        <div>Email: <a href="mailto:${escapeHtml(
+          item.inst.contact.email || ""
+        )}">${escapeHtml(item.inst.contact.email || "—")}</a></div>
+        <div>Phone: ${escapeHtml(item.inst.contact.phone || "—")}</div>
+        <hr>
+        <h6>Software</h6>
+        <div>Type: ${escapeHtml(item.sw.type)}</div>
+        <div>Version: ${escapeHtml(item.sw.version || "—")}</div>
+        <div>Licenses: ${escapeHtml(item.sw.count || "—")}</div>
+        <div>Access: ${escapeHtml(item.sw.access || "—")}</div>
+        <p class="mt-2">${escapeHtml(item.sw.remarks || "")}</p>
+      `;
+
+        // attach actions
+        document.getElementById("btnRequest").onclick = () =>
+          logAction("request_access", item);
+        document.getElementById("btnMarkUsed").onclick = () =>
+          logAction("mark_used", item);
+
+        // render logs filtered for this software-institution pair
+        renderLogs(item);
+
+        modal.show();
+      }
+
+      function logAction(type, item) {
+        const entry = {
+          id: "log_" + Date.now(),
+          ts: new Date().toISOString(),
+          type,
+          institution: { id: item.inst.id, name: item.inst.name },
+          software: { id: item.sw.id, name: item.sw.name },
+          user: { name: "anonymous", email: "" }, // in demo, anonymous. Replace with auth in full app.
+        };
+        logs.unshift(entry);
+        saveLogs(logs);
+        alert("Action recorded locally.");
+        renderLogs(item);
+      }
+
+      function renderLogs(item) {
+        const area = document.getElementById("logArea");
+        const related = logs.filter(
+          (l) =>
+            l.software.id === item.sw.id && l.institution.id === item.inst.id
+        );
+        if (related.length === 0) {
+          area.innerHTML =
+            '<div class="small-muted">No logs yet for this software.</div>';
+          return;
+        }
+        area.innerHTML = related
+          .map(
+            (l) =>
+              `<div class="mb-2"><strong>${l.type}</strong> — ${new Date(
+                l.ts
+              ).toLocaleString()} by ${escapeHtml(
+                l.user.name || "anonymous"
+              )}</div>`
+          )
+          .join("");
+      }
+
+      // small utilities
+      document.getElementById("btnClear").addEventListener("click", () => {
+        if (confirm("Clear all local demo data?")) {
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(LOG_KEY);
+          data = [];
+          logs = [];
+          renderList();
+        }
+      });
+
+      document.getElementById("btnExport").addEventListener("click", () => {
+        // export institutions + software as CSV
+        const rows = [];
+        rows.push([
+          "Institution",
+          "Type",
+          "City",
+          "Website",
+          "Contact Name",
+          "Contact Designation",
+          "Contact Email",
+          "Contact Phone",
+          "Software Name",
+          "Software Type",
+          "Version",
+          "Licenses",
+          "Access",
+          "Remarks",
+        ]);
+        data.forEach((inst) => {
+          (inst.software || []).forEach((sw) => {
+            rows.push([
+              inst.name,
+              inst.type,
+              inst.city,
+              inst.website,
+              inst.contact.name,
+              inst.contact.designation,
+              inst.contact.email,
+              inst.contact.phone,
+              sw.name,
+              sw.type,
+              sw.version,
+              sw.count,
+              sw.access,
+              sw.remarks,
+            ]);
+          });
+        });
+        const csv = rows
+          .map((r) =>
+            r
+              .map((c) => '"' + String(c || "").replace(/"/g, '""') + '"')
+              .join(",")
+          )
+          .join("\n");
+        const blob = new Blob([csv], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "istem_software_directory.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+
+      // basic search / filter events
+      search.addEventListener("input", renderList);
+      filterType.addEventListener("change", renderList);
+
+      // initial render
+      renderList();
+
+      // optional: prefill with sample data if empty (uncomment for demo)
+      // if(data.length === 0){ data = [ { id:'inst_demo', name:'Example Institute of Tech', type:'NIT', city:'Kozhikode, Kerala', website:'https://example.edu', contact:{name:'Dr. A',designation:'Head',email:'a@example.edu',phone:'+91-99999'}, software:[{id:'sw1', name:'SimX', type:'Commercial', version:'3.2', count:'10', access:'Available for external users (on request and approval)', remarks:'Requires approval from HoD'}]} ]; saveData(data); renderList(); }
+    </script>
+  </body>
+</html>
