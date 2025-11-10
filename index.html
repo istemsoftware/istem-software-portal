@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>I-STEM Software Directory — Demo (no-backend)</title>
+    <title>I-STEM Software Directory — Demo (with dummy data)</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -201,7 +201,7 @@
       </div>
     </div>
 
-    <!-- Modal: Software Details -->
+    <!-- Modal -->
     <div class="modal fade" id="detailsModal" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -239,7 +239,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      // Simple client-side SPA using localStorage. Good for prototyping and demos.
       const STORAGE_KEY = "istem_software_directory_v1";
       const LOG_KEY = "istem_access_logs_v1";
 
@@ -267,41 +266,221 @@
       let data = loadData();
       let logs = loadLogs();
 
-      const form = document.getElementById("institutionForm");
-      const list = document.getElementById("list");
-      const search = document.getElementById("search");
-      const filterType = document.getElementById("filterType");
+      // --- Add dummy data if empty ---
+      if (data.length === 0) {
+        data = [
+          {
+            id: "inst1",
+            name: "IIT Delhi",
+            type: "IIT",
+            city: "Delhi",
+            website: "https://iitd.ac.in",
+            contact: {
+              name: "Dr. Arjun Mehta",
+              designation: "Professor",
+              email: "arjun@iitd.ac.in",
+              phone: "+91-9876543210",
+            },
+            software: [
+              {
+                id: "sw_comsol1",
+                name: "COMSOL Multiphysics",
+                type: "Commercial",
+                version: "6.0",
+                count: "25",
+                access:
+                  "Available for external users (on request and approval)",
+                remarks: "Used for multiphysics simulations in engineering.",
+              },
+              {
+                id: "sw_matlab1",
+                name: "MATLAB",
+                type: "Commercial",
+                version: "R2023a",
+                count: "500",
+                access: "Restricted to internal use only",
+                remarks: "Campus-wide academic license.",
+              },
+            ],
+          },
+          {
+            id: "inst2",
+            name: "IIT Madras",
+            type: "IIT",
+            city: "Chennai, Tamil Nadu",
+            website: "https://iitm.ac.in",
+            contact: {
+              name: "Dr. Priya Iyer",
+              designation: "Head, HPC Lab",
+              email: "priya@iitm.ac.in",
+              phone: "+91-9988776655",
+            },
+            software: [
+              {
+                id: "sw_comsol2",
+                name: "COMSOL Multiphysics",
+                type: "Commercial",
+                version: "6.1",
+                count: "30",
+                access:
+                  "Available for academic collaborations / MoUs",
+                remarks:
+                  "Includes CFD and electromagnetics modules. Accessible via cluster login.",
+              },
+              {
+                id: "sw_matlab2",
+                name: "MATLAB",
+                type: "Commercial",
+                version: "R2024a",
+                count: "100",
+                access:
+                  "Available for external users (on request and approval)",
+                remarks: "Used in coursework and sponsored research.",
+              },
+            ],
+          },
+          {
+            id: "inst3",
+            name: "NIT Trichy",
+            type: "NIT",
+            city: "Tiruchirappalli, Tamil Nadu",
+            website: "https://nitt.edu",
+            contact: {
+              name: "Dr. K. Ramesh",
+              designation: "Associate Professor",
+              email: "ramesh@nitt.edu",
+              phone: "+91-9123456789",
+            },
+            software: [
+              {
+                id: "sw_comsol3",
+                name: "COMSOL Multiphysics",
+                type: "Commercial",
+                version: "5.6",
+                count: "15",
+                access:
+                  "Restricted to internal use only",
+                remarks: "Used in M.Tech projects.",
+              },
+              {
+                id: "sw_matlab3",
+                name: "MATLAB",
+                type: "Commercial",
+                version: "R2022b",
+                count: "200",
+                access:
+                  "Available for academic collaborations / MoUs",
+                remarks: "Available for joint research.",
+              },
+            ],
+          },
+          {
+            id: "inst4",
+            name: "IISc Bangalore",
+            type: "IISc",
+            city: "Bangalore, Karnataka",
+            website: "https://iisc.ac.in",
+            contact: {
+              name: "Dr. Shweta Rao",
+              designation: "Systems Admin",
+              email: "shweta@iisc.ac.in",
+              phone: "+91-9012345678",
+            },
+            software: [
+              {
+                id: "sw_matlab4",
+                name: "MATLAB",
+                type: "Commercial",
+                version: "R2023a",
+                count: "300",
+                access:
+                  "Available for academic collaborations / MoUs",
+                remarks: "Includes Simulink and deep learning toolboxes.",
+              },
+            ],
+          },
+          {
+            id: "inst5",
+            name: "IIIT Hyderabad",
+            type: "IIIT",
+            city: "Hyderabad, Telangana",
+            website: "https://iiit.ac.in",
+            contact: {
+              name: "Prof. S. Nair",
+              designation: "Dean, R&D",
+              email: "nair@iiit.ac.in",
+              phone: "+91-9090909090",
+            },
+            software: [
+              {
+                id: "sw_matlab5",
+                name: "MATLAB",
+                type: "Commercial",
+                version: "R2021b",
+                count: "150",
+                access: "Restricted to internal use only",
+                remarks: "Used for AI/ML research projects.",
+              },
+            ],
+          },
+          {
+            id: "inst6",
+            name: "Central University of Kerala",
+            type: "Central University",
+            city: "Kasaragod, Kerala",
+            website: "https://cukerala.ac.in",
+            contact: {
+              name: "Dr. Thomas Mathew",
+              designation: "Associate Professor",
+              email: "thomas@cuk.ac.in",
+              phone: "+91-8899776655",
+            },
+            software: [
+              {
+                id: "sw_converter1",
+                name: "Data Converter",
+                type: "Open Source",
+                version: "1.0",
+                count: "unlimited",
+                access:
+                  "Available for external users (on request and approval)",
+                remarks: "Simple open-source data format converter.",
+              },
+            ],
+          },
+        ];
+        saveData(data);
+      }
+
+      let form = document.getElementById("institutionForm");
+      let list = document.getElementById("list");
+      let search = document.getElementById("search");
+      let filterType = document.getElementById("filterType");
+
+      function escapeHtml(s) {
+        return (s || "")
+          .toString()
+          .replace(/[&<>\"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      }
 
       function renderList() {
         const q = search.value.trim().toLowerCase();
         const typeFilter = filterType.value;
         list.innerHTML = "";
-        // flatten all software entries across institutions
         const rows = [];
-        data.forEach((inst) => {
-          (inst.software || []).forEach((sw) => {
-            rows.push({ inst, sw });
-          });
-        });
+        data.forEach((inst) => (inst.software || []).forEach((sw) => rows.push({ inst, sw })));
         const filtered = rows.filter((r) => {
           if (typeFilter && r.sw.type !== typeFilter) return false;
           if (!q) return true;
           return (
-            r.sw.name +
-            " " +
-            r.inst.name +
-            " " +
-            (r.inst.city || "") +
-            " " +
-            (r.sw.remarks || "")
+            r.sw.name + " " + r.inst.name + " " + (r.inst.city || "") + " " + (r.sw.remarks || "")
           )
             .toLowerCase()
             .includes(q);
         });
 
         if (filtered.length === 0) {
-          list.innerHTML =
-            '<div class="col-12"><div class="alert alert-info">No results. Add one using the form on the left.</div></div>';
+          list.innerHTML = '<div class="col-12"><div class="alert alert-info">No results found.</div></div>';
           return;
         }
 
@@ -311,133 +490,52 @@
           const card = document.createElement("div");
           card.className = "card card-software";
           card.innerHTML = `
-          <div class="card-body">
-            <div class="d-flex">
-              <div>
-                <h5 class="card-title mb-1">${escapeHtml(item.sw.name)}</h5>
-                <div class="small-muted mb-2">${escapeHtml(
-                  item.inst.name
-                )} — ${escapeHtml(item.inst.city || "")}</div>
-                <div class="mb-1">
-                  <span class="tag">${escapeHtml(item.sw.type)}</span>
-                  <span class="tag">${escapeHtml(item.sw.version || "")}</span>
-                  <span class="tag">${escapeHtml(item.sw.count || "")}</span>
+            <div class="card-body">
+              <div class="d-flex">
+                <div>
+                  <h5 class="card-title mb-1">${escapeHtml(item.sw.name)}</h5>
+                  <div class="small-muted mb-2">${escapeHtml(item.inst.name)} — ${escapeHtml(item.inst.city || "")}</div>
+                  <div class="mb-1">
+                    <span class="tag">${escapeHtml(item.sw.type)}</span>
+                    <span class="tag">${escapeHtml(item.sw.version || "")}</span>
+                    <span class="tag">${escapeHtml(item.sw.count || "")}</span>
+                  </div>
+                  <p class="mb-0 small-muted">${escapeHtml((item.sw.remarks || "").slice(0, 120))}${
+            (item.sw.remarks || "").length > 120 ? "..." : ""
+          }</p>
                 </div>
-                <p class="mb-0 small-muted">${escapeHtml(
-                  (item.sw.remarks || "").slice(0, 140)
-                )}${(item.sw.remarks || "").length > 140 ? "..." : ""}</p>
+                <div class="ms-auto text-end">
+                  <button class="btn btn-sm btn-outline-primary" data-action="view">View</button>
+                </div>
               </div>
-              <div class="ms-auto text-end">
-                <button class="btn btn-sm btn-outline-primary" data-action="view">View</button>
-              </div>
-            </div>
-          </div>
-        `;
-          card
-            .querySelector('[data-action="view"]')
-            .addEventListener("click", () => openDetails(item));
+            </div>`;
+          card.querySelector('[data-action="view"]').addEventListener("click", () => openDetails(item));
           col.appendChild(card);
           list.appendChild(col);
         });
       }
 
-      function escapeHtml(s) {
-        return (s || "")
-          .toString()
-          .replace(
-            /[&<>\"]/g,
-            (c) =>
-              ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
-          );
-      }
-
-      form.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const inst = {
-          id: "inst_" + Date.now(),
-          name: document.getElementById("instName").value.trim(),
-          type: document.getElementById("instType").value,
-          city: document.getElementById("instCity").value.trim(),
-          website: document.getElementById("instWeb").value.trim(),
-          contact: {
-            name: document.getElementById("contactName").value.trim(),
-            designation: document.getElementById("contactDesg").value.trim(),
-            email: document.getElementById("contactEmail").value.trim(),
-            phone: document.getElementById("contactPhone").value.trim(),
-          },
-          software: [],
-        };
-        const sw = {
-          id: "sw_" + Date.now(),
-          name: document.getElementById("swName").value.trim(),
-          type: document.getElementById("swType").value,
-          version: document.getElementById("swVersion").value.trim(),
-          count: document.getElementById("swCount").value.trim(),
-          access: document.getElementById("swAccess").value,
-          remarks: document.getElementById("swRemarks").value.trim(),
-        };
-        if (sw.name) inst.software.push(sw);
-
-        // if institution with same name exists, append software; otherwise add new
-        const existing = data.find(
-          (d) =>
-            d.name.toLowerCase() === inst.name.toLowerCase() &&
-            d.city === inst.city
-        );
-        if (existing) {
-          existing.software = existing.software.concat(inst.software);
-          existing.contact = inst.contact; // update contact
-        } else {
-          data.push(inst);
-        }
-        saveData(data);
-        form.reset();
-        renderList();
-        alert("Saved locally in your browser storage.");
-      });
-
       function openDetails(item) {
-        const modal = new bootstrap.Modal(
-          document.getElementById("detailsModal")
-        );
-        document.getElementById("modalTitle").textContent =
-          item.sw.name + " — " + item.inst.name;
+        const modal = new bootstrap.Modal(document.getElementById("detailsModal"));
+        document.getElementById("modalTitle").textContent = item.sw.name + " — " + item.inst.name;
         const b = document.getElementById("modalBody");
         b.innerHTML = `
-        <div><strong>Institution:</strong> ${escapeHtml(
-          item.inst.name
-        )} (${escapeHtml(item.inst.type)})</div>
-        <div><strong>City:</strong> ${escapeHtml(item.inst.city || "")}</div>
-        <div><strong>Website:</strong> <a href="${escapeHtml(
-          item.inst.website || "#"
-        )}">${escapeHtml(item.inst.website || "—")}</a></div>
-        <hr>
-        <h6>Contact</h6>
-        <div>${escapeHtml(item.inst.contact.name || "—")} — ${escapeHtml(
-          item.inst.contact.designation || ""
-        )}</div>
-        <div>Email: <a href="mailto:${escapeHtml(
-          item.inst.contact.email || ""
-        )}">${escapeHtml(item.inst.contact.email || "—")}</a></div>
-        <div>Phone: ${escapeHtml(item.inst.contact.phone || "—")}</div>
-        <hr>
-        <h6>Software</h6>
-        <div>Type: ${escapeHtml(item.sw.type)}</div>
-        <div>Version: ${escapeHtml(item.sw.version || "—")}</div>
-        <div>Licenses: ${escapeHtml(item.sw.count || "—")}</div>
-        <div>Access: ${escapeHtml(item.sw.access || "—")}</div>
-        <p class="mt-2">${escapeHtml(item.sw.remarks || "")}</p>
-      `;
-
-        // attach actions
-        document.getElementById("btnRequest").onclick = () =>
-          logAction("request_access", item);
-        document.getElementById("btnMarkUsed").onclick = () =>
-          logAction("mark_used", item);
-
-        // render logs filtered for this software-institution pair
+          <div><strong>Institution:</strong> ${escapeHtml(item.inst.name)} (${escapeHtml(item.inst.type)})</div>
+          <div><strong>City:</strong> ${escapeHtml(item.inst.city || "")}</div>
+          <div><strong>Website:</strong> <a href="${escapeHtml(item.inst.website)}" target="_blank">${escapeHtml(item.inst.website)}</a></div>
+          <hr><h6>Contact</h6>
+          <div>${escapeHtml(item.inst.contact.name || "—")} — ${escapeHtml(item.inst.contact.designation || "")}</div>
+          <div>Email: <a href="mailto:${escapeHtml(item.inst.contact.email)}">${escapeHtml(item.inst.contact.email)}</a></div>
+          <div>Phone: ${escapeHtml(item.inst.contact.phone || "—")}</div>
+          <hr><h6>Software</h6>
+          <div>Type: ${escapeHtml(item.sw.type)}</div>
+          <div>Version: ${escapeHtml(item.sw.version)}</div>
+          <div>Licenses: ${escapeHtml(item.sw.count)}</div>
+          <div>Access: ${escapeHtml(item.sw.access)}</div>
+          <p class="mt-2">${escapeHtml(item.sw.remarks || "")}</p>`;
+        document.getElementById("btnRequest").onclick = () => logAction("request_access", item);
+        document.getElementById("btnMarkUsed").onclick = () => logAction("mark_used", item);
         renderLogs(item);
-
         modal.show();
       }
 
@@ -448,7 +546,7 @@
           type,
           institution: { id: item.inst.id, name: item.inst.name },
           software: { id: item.sw.id, name: item.sw.name },
-          user: { name: "anonymous", email: "" }, // in demo, anonymous. Replace with auth in full app.
+          user: { name: "anonymous", email: "" },
         };
         logs.unshift(entry);
         saveLogs(logs);
@@ -459,27 +557,22 @@
       function renderLogs(item) {
         const area = document.getElementById("logArea");
         const related = logs.filter(
-          (l) =>
-            l.software.id === item.sw.id && l.institution.id === item.inst.id
+          (l) => l.software.id === item.sw.id && l.institution.id === item.inst.id
         );
         if (related.length === 0) {
-          area.innerHTML =
-            '<div class="small-muted">No logs yet for this software.</div>';
+          area.innerHTML = '<div class="small-muted">No logs yet for this software.</div>';
           return;
         }
         area.innerHTML = related
           .map(
             (l) =>
-              `<div class="mb-2"><strong>${l.type}</strong> — ${new Date(
-                l.ts
-              ).toLocaleString()} by ${escapeHtml(
-                l.user.name || "anonymous"
-              )}</div>`
+              `<div class="mb-2"><strong>${l.type}</strong> — ${new Date(l.ts).toLocaleString()} by ${
+                l.user.name
+              }</div>`
           )
           .join("");
       }
 
-      // small utilities
       document.getElementById("btnClear").addEventListener("click", () => {
         if (confirm("Clear all local demo data?")) {
           localStorage.removeItem(STORAGE_KEY);
@@ -491,26 +584,26 @@
       });
 
       document.getElementById("btnExport").addEventListener("click", () => {
-        // export institutions + software as CSV
-        const rows = [];
-        rows.push([
-          "Institution",
-          "Type",
-          "City",
-          "Website",
-          "Contact Name",
-          "Contact Designation",
-          "Contact Email",
-          "Contact Phone",
-          "Software Name",
-          "Software Type",
-          "Version",
-          "Licenses",
-          "Access",
-          "Remarks",
-        ]);
-        data.forEach((inst) => {
-          (inst.software || []).forEach((sw) => {
+        const rows = [
+          [
+            "Institution",
+            "Type",
+            "City",
+            "Website",
+            "Contact Name",
+            "Contact Designation",
+            "Contact Email",
+            "Contact Phone",
+            "Software Name",
+            "Software Type",
+            "Version",
+            "Licenses",
+            "Access",
+            "Remarks",
+          ],
+        ];
+        data.forEach((inst) =>
+          (inst.software || []).forEach((sw) =>
             rows.push([
               inst.name,
               inst.type,
@@ -526,16 +619,10 @@
               sw.count,
               sw.access,
               sw.remarks,
-            ]);
-          });
-        });
-        const csv = rows
-          .map((r) =>
-            r
-              .map((c) => '"' + String(c || "").replace(/"/g, '""') + '"')
-              .join(",")
+            ])
           )
-          .join("\n");
+        );
+        const csv = rows.map((r) => r.map((c) => `"${String(c || "").replace(/"/g, '""')}"`).join(",")).join("\n");
         const blob = new Blob([csv], { type: "text/csv" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -545,15 +632,9 @@
         URL.revokeObjectURL(url);
       });
 
-      // basic search / filter events
       search.addEventListener("input", renderList);
       filterType.addEventListener("change", renderList);
-
-      // initial render
       renderList();
-
-      // optional: prefill with sample data if empty (uncomment for demo)
-      // if(data.length === 0){ data = [ { id:'inst_demo', name:'Example Institute of Tech', type:'NIT', city:'Kozhikode, Kerala', website:'https://example.edu', contact:{name:'Dr. A',designation:'Head',email:'a@example.edu',phone:'+91-99999'}, software:[{id:'sw1', name:'SimX', type:'Commercial', version:'3.2', count:'10', access:'Available for external users (on request and approval)', remarks:'Requires approval from HoD'}]} ]; saveData(data); renderList(); }
     </script>
   </body>
 </html>
